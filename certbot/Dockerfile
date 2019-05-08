@@ -1,7 +1,7 @@
-FROM debian:jessie-backports
+FROM debian:stretch
  
 RUN apt-get update \
-  && apt-get install -y letsencrypt -t jessie-backports \
+  && apt-get install -y letsencrypt \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /etc/letsencrypt/live/letsencrypt.devsidestory.com \
