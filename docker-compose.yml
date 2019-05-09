@@ -1,11 +1,17 @@
-version: '2'
+version: '3'
 
 services:
   proxy:
     build: ./nginx
+    image: carlososuna86/certbot:proxy
+    container_name: proxy
+    environment:
+      - DEBUG
+      - SSL_DOMAIN
+      - SSL_ADMIN
     volumes:
-      - letsencrypt_certs:/etc/nginx/certs
-      - letsencrypt_www:/var/www/letsencrypt
+      - ./certs:/etc/nginx/certs
+      - ./www:/var/www/letsencrypt
     links:
       - app:letsencrypt.devsidestory.com
     ports:
@@ -15,16 +21,25 @@ services:
 
   letsencrypt:
     build: ./certbot
+    image: carlososuna86/certbot:certbot
+    container_name: certbot
     command: /bin/true
+    environment:
+      - DEBUG
+      - SSL_DOMAIN
+      - SSL_ADMIN
     volumes:
-      - letsencrypt_certs:/etc/letsencrypt
-      - letsencrypt_www:/var/www/letsencrypt
+      - ./certs:/etc/letsencrypt
+      - ./www:/var/www/letsencrypt
 
   app:
     image: dockercloud/hello-world
     restart: always
 
-volumes:
-  letsencrypt_certs: ~
-  letsencrypt_www: ~
-
+#volumes:
+#  letsencrypt_certs: 
+#   - type: bind
+#     source: ./certs
+#  letsencrypt_www: 
+#   - type: bind
+#     source: ./www
