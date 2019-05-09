@@ -6,6 +6,7 @@ mkdir -p $SSL_DIR
 if [ ! -f $SSL_DIR/privkey.pem ] || [ ! -f $SSL_DIR/fullchain.pem ]; then
   mkdir -p $SSL_DIR
 
+  echo Creating self-signed certificates at $SSL_DIR
   openssl req \
     -x509 \
     -nodes \
@@ -14,9 +15,11 @@ if [ ! -f $SSL_DIR/privkey.pem ] || [ ! -f $SSL_DIR/fullchain.pem ]; then
     -keyout $SSL_DIR/privkey.pem \
     -out $SSL_DIR/fullchain.pem \
     -subj /CN=$SSL_DOMAIN
-
-  chmod +r $SSL_DIR/privkey.pem
+  cp $SSL_DIR/fullchain.pem $SSL_DIR/chain.pem
+  cp $SSL_DIR/fullchain.pem $SSL_DIR/cert.pem
+  chmod +r $SSL_DIR/*.pem
 fi
 
 # Pass other arguments to the container
+echo $@
 $@
