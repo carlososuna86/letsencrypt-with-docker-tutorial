@@ -18,6 +18,8 @@ services:
       - "80:80"
       - "443:443"
     restart: always
+    networks:
+      letsencrypt.tutorial:
 
   letsencrypt:
     build: ./certbot
@@ -31,11 +33,17 @@ services:
     volumes:
       - ./certs:/etc/letsencrypt
       - ./www:/var/www/letsencrypt
+    networks:
+      letsencrypt.tutorial:
 
   app:
     image: dockercloud/hello-world
     container_name: app
     restart: always
+    expose:
+      - "80"
+    networks:
+      letsencrypt.tutorial:
 
 #volumes:
 #  letsencrypt_certs: 
@@ -44,3 +52,6 @@ services:
 #  letsencrypt_www: 
 #   - type: bind
 #     source: ./www
+
+networks:
+  letsencrypt.tutorial:
