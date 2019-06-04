@@ -1,16 +1,19 @@
 #!/bin/bash
 
-clear
-
 if [ ! -f .env ]; then
   cp env.example .env
 fi
 source .env
 
-docker-compose build
-clear
+if [ -z "$(groups | grep docker)" ]; then
+  CMD=sudo
+else
+  CMD=
+fi
 
-docker-compose up -d
+$CMD docker-compose build
+
+$CMD docker-compose up -d
 
 if $DEBUG
 then
